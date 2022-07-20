@@ -1,0 +1,45 @@
+# Trigger the workflow only when:
+# - a new pull request with any name/type is opened against the master, develop, hotfix/* or release/* branch
+# - a commit is directly pushed to the pull request
+ 
+name: Continuous Integration
+ 
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+      - hotfix/*
+      - release/*
+ 
+jobs:
+ 
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use repository
+        uses: actions/checkout@v2
+      - name: Upload repository
+        uses: actions/upload-artifact@v2
+        with:
+          name: repository
+          path: |
+            ${{ github.workspace }}/main.go
+            ${{ github.workspace }}/main_test.go
+            ${{ github.workspace }}/go.mod
+            ${{ github.workspace }}/go.sum
+ 
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Golang 1.17
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+      - name: Download repository
+        uses: actions/download-artifact@v2
+        with:
+          name: repository
+      - name: Run tests
+        run: go test -v -race -timeout=180s -count=1 -cover ./...
