@@ -28,6 +28,6 @@ docker-push: ## Build, tag and push service image to registry then clean up loca
 .PHONY: helm-deploy
 helm-deploy: ## Deploy go applications.
 	helm upgrade --install --atomic --timeout 1m rest infra/helm/ -f infra/helm/values.yaml \
-		--kube-context nonprod --namespace develop --create-namespace \
+		--kube-context minikube --namespace develop --create-namespace \
 		--set image.tag=${TAG}
 
