@@ -1,6 +1,7 @@
 # Trigger the workflow only when:
 # - a new pull request with any name/type is opened against the master, develop, hotfix/* or release/* branch
 # - a commit is directly pushed to the pull request
+# just trigeer
  
 name: Continuous Integration
  
